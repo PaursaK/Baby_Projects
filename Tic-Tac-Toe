@@ -1,0 +1,226 @@
+import pandas as pd
+import numpy as np
+
+import random
+
+#Initializing player and computer icons for the game
+eligible_string = False
+while eligible_string == False:
+    player_icon = input("Please enter 'X' or 'O' for the icon you wish to play as in tic-tac-toe: ")
+    
+    if player_icon == "X":
+        computer_icon = "O"
+        
+        eligible_string = True
+    elif player_icon == "O":
+        computer_icon = "X"
+        eligible_string = True
+    else:
+        print("----")
+        print("Invalid character, please try again.")
+        print("----")
+
+#iterates and prints the board in the correct format
+def board_iterator(board):
+    for item in board:
+        print(item)
+    
+#player function: presents current board layout and asks user for coordinates for where they would like to go for their next move    
+def player(board):
+    
+    error = True
+
+    #continues to iterate until valid input from user is provided
+    while error == True:
+        try:
+            
+            print("----")
+            print("Here is the current board: ")
+            board_iterator(board)
+            row_selection = input("Which row would you like to select, only choose one integer from 1 to 3: ")
+    
+            row_index = int(row_selection) - 1
+    
+            col_selection = input("Which column would you like to select, only choose one integer from 1 to 3: ")
+    
+            col_index = int(col_selection) - 1 
+            print("----")
+            print("You have chosen coordinates {},{} (row, col)".format(row_selection, col_selection))
+        
+            error = False
+
+            #makes sure the coordinates provided is within the indexing parameters of the gameboard
+            if col_index >= 0 and row_index >= 0:
+                if board[row_index][col_index] != "X" and board[row_index][col_index] != "O":
+                    board[row_index][col_index] = player_icon
+        
+    
+            #notifies user that space is already occupied  
+                else:
+                    print("----")
+                    print("The square you have selected is already filled, please try again.")
+        
+                    error = True
+
+            #notifies user that they used an invalid coordinate
+            else:
+                print("----")
+                print("You have entered an invalid coordinate, please try again.")
+                
+                error = True
+
+        #notifies user that they used an invalid character for coordinates
+        except:
+            print("----")
+            print("You have entered an invalid character, please try again.")
+    
+    
+    print(board_iterator(board))
+    return board
+                
+
+#computer player: uses a random library to aimlessly play the tic-tac-toe game against user    
+def computer(board):
+    
+    let_it_run = False
+    
+    while let_it_run == False:
+    
+        row = random.randint(0, 2)
+        col = random.randint(0, 2)
+
+        #Makes sure to only make changes to the board if their are open positions, if not it will randomize again until there is an open spot based on the random indexing
+        if board[row][col] != player_icon and board[row][col] != computer_icon:
+            board[row][col] = computer_icon
+            let_it_run = True
+                
+            
+    print("Computer has chosen coordinates {}, {} (row, col)".format(row+1, col+1))    
+    print(board_iterator(board))
+    return board
+    
+
+    
+#The this function checks the players board for horizontal, vertical and diagnol 3 in a row victories
+#returns a False if no win is detected, and a True if a win is a detected
+
+def check_player_board(board):
+    #First Column Check Player
+    if board[0][0] == player_icon and board[1][0] == player_icon and board[2][0] == player_icon:
+        win_play = True
+    #Second Column Check Player 
+    elif board[0][1] == player_icon and board[1][1] == player_icon and board[2][1] == player_icon:
+        win_play = True
+    #Third Column Check Player
+    elif board[0][2] == player_icon and board[1][2] == player_icon and board[2][2] == player_icon:
+        win_play = True
+    else:   
+        #First Row Check Player
+        if board[0][0] == player_icon and board[0][1] == player_icon and board[0][2] == player_icon:
+            win_play = True
+        #Second Row Check Player
+        elif board[1][0] == player_icon and board[1][1] == player_icon and board[1][2] == player_icon:
+            win_play = True
+        #Third Row Check Player
+        elif board[2][0] == player_icon and board[2][1] == player_icon and board[2][2] == player_icon:
+            win_play = True
+        else:
+            #Diagnol Check Player
+            if board[0][0] == player_icon and board[1][1] == player_icon and board[2][2] == player_icon:
+                win_play = True
+            elif board[2][0] == player_icon and board[1][1] == player_icon and board[0][2] == player_icon:
+                win_play = True
+            else:
+                win_play = False
+                
+    return win_play
+    
+#The this function checks the players board for horizontal, vertical and diagnol 3 in a row victories
+#returns a False if no win is detected, and a True if a win is a detected
+
+def check_comp_board(board):
+    #First Column Check Comp
+    if board[0][0] == computer_icon and board[1][0] == computer_icon and board[2][0] == computer_icon:
+        win_comp = True
+    #Second Column Check Comp 
+    elif board[0][1] == computer_icon and board[1][1] == computer_icon and board[2][1] == computer_icon:
+        win_comp = True
+    #Third Column Check Comp
+    elif board[0][2] == computer_icon and board[1][2] == computer_icon and board[2][2] == computer_icon:
+        win_comp = True
+    else:   
+        #First Row Check Comp
+        if board[0][0] == computer_icon and board[0][1] == computer_icon and board[0][2] == computer_icon:
+            win_comp = True
+        #Second Row Check Comp
+        elif board[1][0] == computer_icon and board[1][1] == computer_icon and board[1][2] == computer_icon:
+            win_comp = True
+        #Third Row Check Comp
+        elif board[2][0] == computer_icon and board[2][1] == computer_icon and board[2][2] == computer_icon:
+            win_comp = True
+        else:
+            #Diagnol Check Comp
+            if board[0][0] == computer_icon and board[1][1] == computer_icon and board[2][2] == computer_icon:
+                win_comp = True
+            elif board[2][0] == computer_icon and board[1][1] == computer_icon and board[0][2] == computer_icon:
+                win_comp = True
+            else:
+                win_comp = False
+    return win_comp
+
+def main():
+    #board for the game
+    board = [[' ',' ',' '],
+             [' ',' ',' '],
+             [' ',' ',' ']]
+    
+    win = False
+    while win == False:
+
+        #initialize win variables to false for both opponents
+        win_comp = False
+        win_play = False
+
+        #calls the player function on the empty board and saves as board variable to be recycled
+        board = player(board)
+        if check_player_board(board) == True:
+            print("You won!")
+            break
+            
+        else:
+            #this iterates over the entire board to make sure the board is not full, if the board is not full, the game will continue with the computers turn
+            tie_check = []    
+            for i in range(0,3):
+                for j in range(0,3):
+                    tie_check.append(board[i][j])
+        
+            if ' ' not in tie_check:
+                print("Tie!")
+                break
+            #This calls the computer player function on the board that was manipulated by the player function, this then gets recycled back into the player function
+            board = computer(board)
+            #we check if the computer has made a winning move, if not we start the iteration over again
+            if check_comp_board(board) == True:
+                print("Computer won")
+                break
+            
+        
+        
+                   
+            
+        
+#this calls the program
+if __name__ == '__main__':
+    main()
+
+
+
+
+
+
+
+
+
+
+
+
