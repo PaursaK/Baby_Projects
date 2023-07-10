@@ -6,7 +6,9 @@ import random
 #Initializing player and computer icons for the game
 eligible_string = False
 while eligible_string == False:
-    player_icon = input("Please enter 'X' or 'O' for the icon you wish to play as in tic-tac-toe: ")
+    player_icon_user = input("Please enter 'X' or 'O' for the icon you wish to play as in tic-tac-toe: ")
+
+    player_icon = player_icon_user.upper()
     
     if player_icon == "X":
         computer_icon = "O"
