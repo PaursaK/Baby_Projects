@@ -52,7 +52,7 @@ def player(board):
             error = False
 
             #makes sure the coordinates provided is within the indexing parameters of the gameboard
-            if col_index >= 0 and row_index >= 0:
+            if 2 >= col_index >= 0 and 2 >= row_index >= 0:
                 if board[row_index][col_index] != "X" and board[row_index][col_index] != "O":
                     board[row_index][col_index] = player_icon
         
