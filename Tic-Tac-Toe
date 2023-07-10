@@ -87,7 +87,8 @@ def computer(board):
     let_it_run = False
     
     while let_it_run == False:
-    
+
+        #randomly selects coordinates with randint method
         row = random.randint(0, 2)
         col = random.randint(0, 2)
 
@@ -141,27 +142,27 @@ def check_player_board(board):
 #returns a False if no win is detected, and a True if a win is a detected
 
 def check_comp_board(board):
-    #First Column Check Comp
+    #First Column Check Computer
     if board[0][0] == computer_icon and board[1][0] == computer_icon and board[2][0] == computer_icon:
         win_comp = True
-    #Second Column Check Comp 
+    #Second Column Check Computer
     elif board[0][1] == computer_icon and board[1][1] == computer_icon and board[2][1] == computer_icon:
         win_comp = True
-    #Third Column Check Comp
+    #Third Column Check Computer
     elif board[0][2] == computer_icon and board[1][2] == computer_icon and board[2][2] == computer_icon:
         win_comp = True
     else:   
-        #First Row Check Comp
+        #First Row Check Computer
         if board[0][0] == computer_icon and board[0][1] == computer_icon and board[0][2] == computer_icon:
             win_comp = True
-        #Second Row Check Comp
+        #Second Row Check Computer
         elif board[1][0] == computer_icon and board[1][1] == computer_icon and board[1][2] == computer_icon:
             win_comp = True
-        #Third Row Check Comp
+        #Third Row Check Computer
         elif board[2][0] == computer_icon and board[2][1] == computer_icon and board[2][2] == computer_icon:
             win_comp = True
         else:
-            #Diagnol Check Comp
+            #Diagnol Check Computer
             if board[0][0] == computer_icon and board[1][1] == computer_icon and board[2][2] == computer_icon:
                 win_comp = True
             elif board[2][0] == computer_icon and board[1][1] == computer_icon and board[0][2] == computer_icon:
@@ -179,10 +180,6 @@ def main():
     win = False
     while win == False:
 
-        #initialize win variables to false for both opponents
-        win_comp = False
-        win_play = False
-
         #calls the player function on the empty board and saves as board variable to be recycled
         board = player(board)
         if check_player_board(board) == True:
@@ -195,12 +192,15 @@ def main():
             for i in range(0,3):
                 for j in range(0,3):
                     tie_check.append(board[i][j])
-        
+
+            #checks to see if there are still blank/empty spaces in the 'board'
             if ' ' not in tie_check:
                 print("Tie!")
                 break
+
             #This calls the computer player function on the board that was manipulated by the player function, this then gets recycled back into the player function
             board = computer(board)
+
             #we check if the computer has made a winning move, if not we start the iteration over again
             if check_comp_board(board) == True:
                 print("Computer won")
