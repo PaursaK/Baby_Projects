@@ -77,7 +77,7 @@ def player(board):
             print("You have entered an invalid character, please try again.")
     
     
-    print(board_iterator(board))
+    board_iterator(board)
     return board
                 
 
@@ -97,9 +97,9 @@ def computer(board):
             board[row][col] = computer_icon
             let_it_run = True
                 
-            
+    print("----")        
     print("Computer has chosen coordinates {}, {} (row, col)".format(row+1, col+1))    
-    print(board_iterator(board))
+    board_iterator(board)
     return board
     
 
