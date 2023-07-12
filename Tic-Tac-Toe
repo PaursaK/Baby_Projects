@@ -3,13 +3,18 @@ import numpy as np
 
 import random
 
-#Initializing player and computer icons for the game
+
+#Create a while loop until user enters appropiate conditions: must input either upper or lower case 'X' or 'O' 
+
+#Initialize While Loop
 eligible_string = False
 while eligible_string == False:
+    #Ask User for Input
     player_icon_user = input("Please enter 'X' or 'O' for the icon you wish to play as in tic-tac-toe: ")
-
+    #convert upper or lowercase entry to uppercase
     player_icon = player_icon_user.upper()
     
+    #Conditional to set up player and computer icons for gameplay
     if player_icon == "X":
         computer_icon = "O"
         
@@ -18,85 +23,112 @@ while eligible_string == False:
         computer_icon = "X"
         eligible_string = True
     else:
+    #If 'X' or 'O' are not input, prompts user again
         print("----")
         print("Invalid character, please try again.")
         print("----")
 
-#iterates and prints the board in the correct format
+#function that displays list in a boardgame display
 def board_iterator(board):
     for item in board:
         print(item)
     
-#player function: presents current board layout and asks user for coordinates for where they would like to go for their next move    
+# player function, allows player/user to interact with the game   
 def player(board):
-    
+
+    #Initialize a while loop to prompt the following questions until user satisfies all inputs needed
     error = True
-
-    #continues to iterate until valid input from user is provided
     while error == True:
-        try:
-            
-            print("----")
-            print("Here is the current board: ")
-            board_iterator(board)
+
+        #Displays board   
+        print("----")
+        print("Here is the current board: ")
+        board_iterator(board)
+
+        #While loop conditional that prompts users for row coordinate and continues to ask until conditons are met(must be within coordinate domain)
+        row = False
+        while row == False:
             row_selection = input("Which row would you like to select, only choose one integer from 1 to 3: ")
-    
-            row_index = int(row_selection) - 1
-    
-            col_selection = input("Which column would you like to select, only choose one integer from 1 to 3: ")
-    
-            col_index = int(col_selection) - 1 
-            print("----")
-            print("You have chosen coordinates {},{} (row, col)".format(row_selection, col_selection))
-        
-            error = False
+            try: 
+                #Makes coordinate, index compatible
+                row_index = int(row_selection) - 1
 
-            #makes sure the coordinates provided is within the indexing parameters of the gameboard
-            if 2 >= col_index >= 0 and 2 >= row_index >= 0:
-                if board[row_index][col_index] != "X" and board[row_index][col_index] != "O":
-                    board[row_index][col_index] = player_icon
-        
-    
-            #notifies user that space is already occupied  
+                #checks if index is within domain
+                if 2 >= row_index >= 0:
+                    row = True
                 else:
+                    #if value is not domain compatible, reprompts coordinate question
                     print("----")
-                    print("The square you have selected is already filled, please try again.")
-        
-                    error = True
+                    print("You have entered an invalid coordinate, please try again.")
 
-            #notifies user that they used an invalid coordinate
-            else:
+            #if error occurs while converting user input to integer, prompts invalid character message
+            except:
                 print("----")
-                print("You have entered an invalid coordinate, please try again.")
-                
-                error = True
+                print("You have entered an invalid character, please try again.")
+    
+            
+        #While loop conditional that prompts users for column coordinate and continues to ask until conditons are met(must be within coordinate domain)
+        col = False
+        while col == False:
+            col_selection = input("Which column would you like to select, only choose one integer from 1 to 3: ")
+            try: 
+                #Same as row, makes column coordinate index friendly 
+                col_index = int(col_selection) - 1
 
-        #notifies user that they used an invalid character for coordinates
-        except:
+                #checks if column index is within domain
+                if 2 >= col_index >= 0:
+                    col = True
+                else:
+                    #reprompts coordinate question if out of index
+                    print("----")
+                    print("You have entered an invalid coordinate, please try again.")
+
+            #reprompts coordinate question if not a value that can be casted as an integer
+            except:
+                print("----")
+                print("You have entered an invalid character, please try again.")
+        
+        
+        #displays decision for user to see
+        print("----")
+        print("You have chosen coordinates {},{} (row, col)".format(row_selection, col_selection))
+
+        #checks whether position of interest if occupied
+        if board[row_index][col_index] != "X" and board[row_index][col_index] != "O":
+            board[row_index][col_index] = player_icon
+
+            #If position not occupied we exit loop and time for computers turn
+            error = False
+    
+        #if position is occupied we go back and reprompt for new coordinates       
+        else:
             print("----")
-            print("You have entered an invalid character, please try again.")
-    
-    
+            print("The square you have selected is already filled, please try again.")
+        
+    #display board with updates changes you chose to make
     board_iterator(board)
+    
     return board
                 
 
-#computer player: uses a random library to aimlessly play the tic-tac-toe game against user    
+#function that allows to play against computer    
 def computer(board):
-    
+
+    #Intiliaze a while loop until computer selection 
     let_it_run = False
     
     while let_it_run == False:
 
-        #randomly selects coordinates with randint method
+        # we assign a random number from 0 --> 2 to assign both row and col, these will act as indices
         row = random.randint(0, 2)
         col = random.randint(0, 2)
 
-        #Makes sure to only make changes to the board if their are open positions, if not it will randomize again until there is an open spot based on the random indexing
+        #We break loop if coordinate position selected with random indices discovers a new space
         if board[row][col] != player_icon and board[row][col] != computer_icon:
             board[row][col] = computer_icon
             let_it_run = True
-                
+
+    # display computer decision and board after decision is made
     print("----")        
     print("Computer has chosen coordinates {}, {} (row, col)".format(row+1, col+1))    
     board_iterator(board)
@@ -104,9 +136,7 @@ def computer(board):
     
 
     
-#The this function checks the players board for horizontal, vertical and diagnol 3 in a row victories
-#returns a False if no win is detected, and a True if a win is a detected
-
+#function to test whether the player icon on the board satisfies a winning condition, 3 in a row vertically, horizontally, or either diagnol   
 def check_player_board(board):
     #First Column Check Player
     if board[0][0] == player_icon and board[1][0] == player_icon and board[2][0] == player_icon:
@@ -138,31 +168,29 @@ def check_player_board(board):
                 
     return win_play
     
-#The this function checks the players board for horizontal, vertical and diagnol 3 in a row victories
-#returns a False if no win is detected, and a True if a win is a detected
-
+#function to test whether the computer icon on the board satisfies a winning condition, 3 in a row vertically, horizontally, or either diagnol    
 def check_comp_board(board):
-    #First Column Check Computer
+    #First Column Check Comp
     if board[0][0] == computer_icon and board[1][0] == computer_icon and board[2][0] == computer_icon:
         win_comp = True
-    #Second Column Check Computer
+    #Second Column Check Comp 
     elif board[0][1] == computer_icon and board[1][1] == computer_icon and board[2][1] == computer_icon:
         win_comp = True
-    #Third Column Check Computer
+    #Third Column Check Comp
     elif board[0][2] == computer_icon and board[1][2] == computer_icon and board[2][2] == computer_icon:
         win_comp = True
     else:   
-        #First Row Check Computer
+        #First Row Check Comp
         if board[0][0] == computer_icon and board[0][1] == computer_icon and board[0][2] == computer_icon:
             win_comp = True
-        #Second Row Check Computer
+        #Second Row Check Comp
         elif board[1][0] == computer_icon and board[1][1] == computer_icon and board[1][2] == computer_icon:
             win_comp = True
-        #Third Row Check Computer
+        #Third Row Check Comp
         elif board[2][0] == computer_icon and board[2][1] == computer_icon and board[2][2] == computer_icon:
             win_comp = True
         else:
-            #Diagnol Check Computer
+            #Diagnol Check Comp
             if board[0][0] == computer_icon and board[1][1] == computer_icon and board[2][2] == computer_icon:
                 win_comp = True
             elif board[2][0] == computer_icon and board[1][1] == computer_icon and board[0][2] == computer_icon:
@@ -172,38 +200,44 @@ def check_comp_board(board):
     return win_comp
 
 def main():
-    #board for the game
+
+    #empty board to start the game
     board = [[' ',' ',' '],
              [' ',' ',' '],
              [' ',' ',' ']]
-    
-    win = False
+
+    #initialize win variable to false for while loop to continue until player or computer wins or if there is a tie (while loop breaks if any of the 3 conditions are met)
     while win == False:
 
-        #calls the player function on the empty board and saves as board variable to be recycled
+        #we update board by calling player function to update board with player decision first
+        #player starts the game
         board = player(board)
+
+        #we will always check if the player has won after their turn
         if check_player_board(board) == True:
-            print("You won!")
+            print("----")
+            print("YOU WIN!")
             break
-            
+
+        #we will also check if after the players turn if there is a tie   
         else:
-            #this iterates over the entire board to make sure the board is not full, if the board is not full, the game will continue with the computers turn
             tie_check = []    
             for i in range(0,3):
                 for j in range(0,3):
                     tie_check.append(board[i][j])
 
-            #checks to see if there are still blank/empty spaces in the 'board'
+            #this checks whether there are any empty spaces left
             if ' ' not in tie_check:
-                print("Tie!")
+                print("----")
+                print("TIE!")
                 break
 
-            #This calls the computer player function on the board that was manipulated by the player function, this then gets recycled back into the player function
+            #we update board with calling the computer function to update the most recent board manipulated by the player 
             board = computer(board)
-
-            #we check if the computer has made a winning move, if not we start the iteration over again
+            #we check if the computer wins after their turn, if not we re-iterate and the gameboard gets passed back and forth between user and computer
             if check_comp_board(board) == True:
-                print("Computer won")
+                print("----")
+                print("COMPUTER WINS!")
                 break
             
         
@@ -211,9 +245,10 @@ def main():
                    
             
         
-#this calls the program
+#this calls the game 
 if __name__ == '__main__':
     main()
+
 
 
 
