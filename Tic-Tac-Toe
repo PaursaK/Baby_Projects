@@ -88,10 +88,6 @@ def player(board):
                 print("----")
                 print("You have entered an invalid character, please try again.")
         
-        
-        #displays decision for user to see
-        print("----")
-        print("You have chosen coordinates {},{} (row, col)".format(row_selection, col_selection))
 
         #checks whether position of interest if occupied
         if board[row_index][col_index] != "X" and board[row_index][col_index] != "O":
@@ -104,7 +100,11 @@ def player(board):
         else:
             print("----")
             print("The square you have selected is already filled, please try again.")
-        
+   
+    #displays decision for user to see
+    print("----")
+    print("You have chosen coordinates {},{} (row, col)".format(row_selection, col_selection)) 
+
     #display board with updates changes you chose to make
     board_iterator(board)
     
@@ -130,7 +130,7 @@ def computer(board):
 
     # display computer decision and board after decision is made
     print("----")        
-    print("Computer has chosen coordinates {}, {} (row, col)".format(row+1, col+1))    
+    print("Computer has chosen coordinates {},{} (row, col)".format(row+1, col+1))    
     board_iterator(board)
     return board
     
