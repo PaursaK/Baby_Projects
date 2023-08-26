@@ -207,6 +207,7 @@ def main():
              [' ',' ',' ']]
 
     #initialize win variable to false for while loop to continue until player or computer wins or if there is a tie (while loop breaks if any of the 3 conditions are met)
+    win = False
     while win == False:
 
         #we update board by calling player function to update board with player decision first
